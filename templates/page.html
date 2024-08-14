@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Recommendation System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('/static/background.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-top: 50px;
+            max-width: 800px;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        form {
+            margin-top: 20px;
+        }
+        .form-group {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .form-group div {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group div + div {
+            margin-left: 10px;
+        }
+        label {
+            margin-bottom: 5px;
+        }
+        input[type="number"] {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            flex: 1;
+        }
+        button {
+            padding: 10px 20px;
+            background: #28a745;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+        button:hover {
+            background: #218838;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .result img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .info {
+            text-align: left;
+            margin-top: 20px;
+        }
+        .info img {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .info p {
+            font-size: 1.2em;
+            margin-top: 10px;
+            color: #ccc;
+        }
+    </style>
+    <script>
+        async function submitForm(event) {
+            event.preventDefault();
+            
+            const data = {
+                N: parseFloat(document.getElementById('N').value),
+                P: parseFloat(document.getElementById('P').value),
+                K: parseFloat(document.getElementById('K').value),
+                temperature: parseFloat(document.getElementById('temperature').value),
+                humidity: parseFloat(document.getElementById('humidity').value),
+                ph: parseFloat(document.getElementById('ph').value),
+                rainfall: parseFloat(document.getElementById('rainfall').value)
+            };
+
+            const response = await fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify([data])
+            
+            });
+            const result = await response.json();
+            document.getElementById('result').textContent = 'Recommended Crop: ' + result[0];
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Crop Recommendation System</h1>
+        <div class="info">
+            <img src="/static/agriculture.jpg" alt="Agriculture Image">
+            <p>The Crop Recommendation System is designed to help farmers and agricultural professionals make informed decisions about what crops to plant. By analyzing soil nutrients and environmental conditions, the system provides recommendations for the most suitable crops, which can lead to higher yields and better resource management.</p>
+            <p>Using advanced machine learning algorithms, this system takes into account various factors such as nitrogen (N), phosphorus (P), potassium (K), temperature, humidity, pH level, and rainfall. The goal is to optimize crop selection and improve agricultural productivity, sustainability, and profitability.</p>
+            <p>This tool is especially beneficial for farmers who need to make quick and accurate decisions to maximize their crop yield and manage resources efficiently. By leveraging data-driven insights, farmers can reduce guesswork and increase the precision of their farming practices.</p>
+        </div>
+        <form onsubmit="submitForm(event)">
+            <div class="form-group">
+                <div>
+                    <label for="N">Nitrogen (N):</label>
+                    <input type="number" id="N" name="N" step="any" required>
+                </div>
+                <div>
+                    <label for="P">Phosphorus (P):</label>
+                    <input type="number" id="P" name="P" step="any" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <div>
+                    <label for="K">Potassium (K):</label>
+                    <input type="number" id="K" name="K" step="any" required>
+                </div>
+                <div>
+                    <label for="temperature">Temperature:</label>
+                    <input type="number" id="temperature" name="temperature" step="any" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <div>
+                    <label for="humidity">Humidity:</label>
+                    <input type="number" id="humidity" name="humidity" step="any" required>
+                </div>
+                <div>
+                    <label for="ph">pH Level:</label>
+                    <input type="number" id="ph" name="ph" step="any" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <div>
+                    <label for="rainfall">Rainfall:</label>
+                    <input type="number" id="rainfall" name="rainfall" step="any" required>
+                </div>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+        <div class="result" id="result"></div>
+    </div>
+</body>
+</html>
+
